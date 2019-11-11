@@ -3,10 +3,10 @@ function Add-MangaDexManga {
     [CmdletBinding(DefaultParameterSetName = 'Default')]
     Param
     (
-        [Parameter(ParameterSetName='Default', Mandatory=$true, HelpMessage='Enter the ID of each manga to monitor.', ValueFromPipeline=$true)]
+        [Parameter(ParameterSetName = 'Default', Mandatory = $true, HelpMessage = 'Enter the ID of each manga to monitor.', ValueFromPipeline = $true)]
         [long]$MangaId
 
-        # [Parameter(ParameterSetName='Import', Mandatory=$false, HelpMessage='Enter the ID of each manga to monitor.', ValueFromPipeline=$false)]
+        # [Parameter(ParameterSetName = 'Import', Mandatory = $false, HelpMessage = 'Enter the ID of each manga to monitor.', ValueFromPipeline = $false)]
         # [Switch]$ImportFromMangaDex
     )
 
@@ -60,11 +60,11 @@ function Get-MangaDexManga {
 }
 
 function Remove-MangaDexManga {
-    [CmdletBinding(DefaultParameterSetName='Id')]
+    [CmdletBinding(DefaultParameterSetName = 'Id')]
     param (
-        [Parameter(ParameterSetName='Id', Mandatory=$true, HelpMessage='Enter the ID of each manga to remove.', ValueFromPipeline=$true)]
+        [Parameter(ParameterSetName = 'Id', Mandatory = $true, HelpMessage = 'Enter the ID of each manga to remove.', ValueFromPipeline = $true)]
         $id,
-        [Parameter(ParameterSetName='Name', Mandatory=$true, HelpMessage='Enter the name of each manga to remove.', ValueFromPipeline=$true)]
+        [Parameter(ParameterSetName = 'Name', Mandatory = $true, HelpMessage = 'Enter the name of each manga to remove.', ValueFromPipeline = $true)]
         $Name
     )
 

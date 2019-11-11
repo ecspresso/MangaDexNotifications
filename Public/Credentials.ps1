@@ -1,11 +1,11 @@
 function Add-MangaDexCredentials {
-    [CmdletBinding(DefaultParameterSetName='Login')]
+    [CmdletBinding(DefaultParameterSetName = 'Login')]
     [Alias("Set-MangaDexCredentials")]
     Param(
-        [Parameter(ParameterSetName='Login', HelpMessage='Enter your MangaDex password.')]
+        [Parameter(ParameterSetName = 'Login', HelpMessage = 'Enter your MangaDex password.')]
         [String]$Username,
 
-        [Parameter(ParameterSetName='Login', HelpMessage='Enter your MangaDex password.')]
+        [Parameter(ParameterSetName = 'Login', HelpMessage = 'Enter your MangaDex password.')]
         [SecureString]$Password
     )
 
@@ -21,11 +21,11 @@ function Add-MangaDexCredentials {
 
 
 function Get-MangaDexCredentials {
-    [CmdletBinding(DefaultParameterSetName='None')]
+    [CmdletBinding(DefaultParameterSetName = 'None')]
     Param(
-        [Parameter(ParameterSetName='Login')]
+        [Parameter(ParameterSetName = 'Login')]
         [Switch]$Username,
-        [Parameter(ParameterSetName='Login')]
+        [Parameter(ParameterSetName = 'Login')]
         [Switch]$Password
     )
 
@@ -55,4 +55,12 @@ function Remove-MangaDexCredentials {
     if($Password) {
         Remove-Item -Path $MDX_Password
     }
+}
+
+function Add-MandaDexPushBullet {
+    [CmdletBinding(DefaultParameterSetName = 'None')]
+    Param(
+        [Parameter(ParameterSetName ='Id', Mandatory = $true, HelpMessage = 'Enter the ID of each manga to remove.', ValueFromPipeline = $true)]
+        [String]$APIKey
+    )
 }

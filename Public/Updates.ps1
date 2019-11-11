@@ -1,9 +1,9 @@
 using namespace System.Collections.Generic
 
 function Get-MangaDexUpdates {
-    [CmdletBinding(DefaultParameterSetName='Default')]
+    [CmdletBinding(DefaultParameterSetName = 'Default')]
     Param(
-        [Parameter(ParameterSetName='id', Mandatory=$true, HelpMessage='Enter the ID of each manga check updates for.', ValueFromPipeline=$true)]
+        [Parameter(ParameterSetName = 'id', Mandatory = $true, HelpMessage = 'Enter the ID of each manga check updates for.', ValueFromPipeline = $true)]
         [long]$MangaId
     )
 
