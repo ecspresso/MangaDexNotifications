@@ -1,7 +1,13 @@
 Import-Module 'G:\My Drive\Programmering\GitHub\MangaDexNotifications\MangaDexNotifications.psd1' -Force
 
-Get-MangaDexUpdates
+# Get-MangaDexUpdates
 # 42232, 15553 | Add-MangaDexManga
 
 # 1..5 | Remove-MangaDexManga
 # Add-MangaDexManga -ImportFromMangaDex
+
+# Add-MandaDexPushBullet -APIKey ''
+
+# Get-MandaDexPushBullet
+
+Remove-MandaDexPushBullet
