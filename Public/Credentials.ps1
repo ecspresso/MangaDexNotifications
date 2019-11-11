@@ -98,7 +98,7 @@ function Add-MandaDexPushBullet {
     }
 }
 
-function Get-MandaDexPushBullet {
+function Get-MangaDexPushBullet {
     [CmdletBinding()]
     Param()
 
