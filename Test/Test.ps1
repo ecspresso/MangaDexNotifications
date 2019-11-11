@@ -8,6 +8,6 @@ Import-Module 'G:\My Drive\Programmering\GitHub\MangaDexNotifications\MangaDexNo
 
 # Add-MandaDexPushBullet -APIKey ''
 
-# Get-MandaDexPushBullet
+# Get-MangaDexPushBullet
 
-Remove-MandaDexPushBullet
+# Remove-MandaDexPushBullet
