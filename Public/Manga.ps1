@@ -1,5 +1,6 @@
 function Add-MangaDexManga {
-    [CmdletBinding(DefaultParameterSetName='Default')]
+    [Alias("Set-MangaDexManga")]
+    [CmdletBinding(DefaultParameterSetName = 'Default')]
     Param
     (
         [Parameter(ParameterSetName='Default', Mandatory=$true, HelpMessage='Enter the ID of each manga to monitor.', ValueFromPipeline=$true)]

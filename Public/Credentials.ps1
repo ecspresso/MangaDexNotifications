@@ -1,5 +1,6 @@
-function Set-MangaDexCredentials {
+function Add-MangaDexCredentials {
     [CmdletBinding(DefaultParameterSetName='Login')]
+    [Alias("Set-MangaDexCredentials")]
     Param(
         [Parameter(ParameterSetName='Login', HelpMessage='Enter your MangaDex password.')]
         [String]$Username,
@@ -39,5 +40,19 @@ function Get-MangaDexCredentials {
         } elseif($Password) {
             return (Get-Content -Path $MDX_Password)
         }
+    }
+}
+
+function Remove-MangaDexCredentials {
+    Param(
+        [Switch]$Username,
+        [Switch]$Password
+    )
+
+    if($Username) {
+        Remove-Item -Path $MDX_Username
+    }
+    if($Password) {
+        Remove-Item -Path $MDX_Password
     }
 }
