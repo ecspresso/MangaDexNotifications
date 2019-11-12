@@ -1,5 +1,4 @@
 function Add-MangaDexManga {
-    [Alias("Set-MangaDexManga")]
     [CmdletBinding(DefaultParameterSetName = 'Default')]
     Param
     (

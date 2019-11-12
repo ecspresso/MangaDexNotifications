@@ -19,15 +19,17 @@ function Get-MangaDexUpdates {
         if($PSCmdlet.ParameterSetName -eq 'id') {
             $lastSeen = (Get-MangaDexManga -MangaID $MangaId).latest_chapter
             $manga = Invoke-RestMethod -Uri ('https://mangadex.org/api/manga/{0}' -f $MangaId)
-            $lastUploaded = ($manga.chapter.PSobject.Properties | Where-Object {$_.MemberType -eq 'NoteProperty'}).Name | Select-Object -First 1
+            $lastUploaded = $manga.chapter.PSobject.Properties | Where-Object {$_.MemberType -eq 'NoteProperty'} | Select-Object -First 1
 
-            if($lastSeen -lt $lastUploaded) {
+            if($lastSeen -lt $lastUploaded.Name) {
                 $newChapters.Add(
                     @(
                         $MangaId
-                        $lastUploaded
+                        $lastUploaded.Name
                     )
                 )
+
+                Send-MangaDexPushBullet -Title $manga.manga.title -Message ('Chapter {0} has been released!' -f $lastUploaded.Value.chapter)
             }
         }
     }
