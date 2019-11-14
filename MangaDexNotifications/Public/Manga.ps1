@@ -33,7 +33,8 @@ function Add-MangaDexManga {
             $manga = Invoke-RestMethod -Uri ('https://mangadex.org/api/manga/{0}' -f $MangaId)
             $newManga["$MangaId"] = @{
                 name = $manga.manga.title
-                latest_chapter = ($manga.chapter.PSobject.Properties | Where-Object {$_.MemberType -eq 'NoteProperty'}).Name | Select-Object -First 1
+                chapter_id = ($manga.chapter.PSobject.Properties | Where-Object {$_.MemberType -eq 'NoteProperty'}).Name | Select-Object -First 1
+                latest_chapter = ($manga.chapter.PSobject.Properties | Where-Object {$_.MemberType -eq 'NoteProperty'}).Value.Chapter | Select-Object -First 1
             }
         }
     }
@@ -51,10 +52,23 @@ function Get-MangaDexManga {
     )
 
     $currentManga = Get-IniContent -FilePath $MDX_Manga
+
     if($MangaID) {
-        $currentManga["$MangaID"]
+        return [PSCustomObject]@{
+            id = $MangaID
+            'latest chapter' = $currentManga["$MangaID"].latest_chapter
+            name = $currentManga["$MangaID"].Name
+        }
     } else {
-        $currentManga
+        $returnObject = [System.Collections.Generic.List[System.Object]]::new()
+        foreach($key in $currentManga.Keys) {
+            $returnObject.Add([PSCustomObject]@{
+                id = $key
+                'latest chapter' = $currentManga[$key].latest_chapter
+                name = $currentManga[$key].Name
+            })
+        }
+        return $returnObject
     }
 }
 

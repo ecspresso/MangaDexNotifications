@@ -17,15 +17,15 @@ function Get-MangaDexUpdates {
 
     Process {
         if($PSCmdlet.ParameterSetName -eq 'id') {
-            $lastSeen = (Get-MangaDexManga -MangaID $MangaId).latest_chapter
+            $lastSeen = (Get-MangaDexManga -MangaID $MangaId).'latest chapter'
             $manga = Invoke-RestMethod -Uri ('https://mangadex.org/api/manga/{0}' -f $MangaId)
             $lastUploaded = $manga.chapter.PSobject.Properties | Where-Object {$_.MemberType -eq 'NoteProperty'} | Select-Object -First 1
 
-            if($lastSeen -lt $lastUploaded.Name) {
+            if($lastSeen -lt $lastUploaded.Value.chapter) {
                 $newChapters.Add(
                     @(
                         $MangaId
-                        $lastUploaded.Name
+                        $lastUploaded.Value.chapter
                     )
                 )
 
