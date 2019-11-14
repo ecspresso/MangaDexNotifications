@@ -17,6 +17,6 @@ This module also has PushBullet support. `Set-MangaDexPushBulletAPI -APIKey 'Key
 The API key is stored as a secure string in a text file.
 
 All settings can be found here _(`$home` variable_):  
-Windows: _`Homedrive`_`:\Users\\`_`Username`_`\MangaDex` _(ex. `C:\Users\JohnSmith\MangaDex`)_  
+Windows: `Homedrive:\Users\Username\MangaDex` _(ex. `C:\Users\JohnSmith\MangaDex`)_  
 Linux:  
-Mac: `/Users/`_`username`_`/MangaDex/`
+Mac: `/Users/username/MangaDex/`
