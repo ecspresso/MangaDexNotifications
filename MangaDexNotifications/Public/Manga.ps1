@@ -33,7 +33,6 @@ function Add-MangaDexManga {
             $manga = Invoke-RestMethod -Uri ('https://mangadex.org/api/manga/{0}' -f $MangaId)
             $newManga["$MangaId"] = @{
                 name = $manga.manga.title
-                chapter_id = ($manga.chapter.PSobject.Properties | Where-Object {$_.MemberType -eq 'NoteProperty'}).Name | Select-Object -First 1
                 latest_chapter = ($manga.chapter.PSobject.Properties | Where-Object {$_.MemberType -eq 'NoteProperty'}).Value.Chapter | Select-Object -First 1
             }
         }
