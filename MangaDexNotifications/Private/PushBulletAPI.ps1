@@ -23,5 +23,5 @@ function Send-MangaDexPushBullet {
 
     $data = $data | ConvertTo-Json -Depth 100
 
-    Invoke-RestMethod -Uri ($baseURI + $endpoint) -Headers $headers -ContentType 'application/json' -Method POST -Body $data
+    [void] (Invoke-RestMethod -Uri ($baseURI + $endpoint) -Headers $headers -ContentType 'application/json' -Method POST -Body $data)
 }
