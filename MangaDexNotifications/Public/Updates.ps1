@@ -4,12 +4,20 @@ function Get-MangaDexUpdates {
     [CmdletBinding(DefaultParameterSetName = 'Default')]
     Param(
         [Parameter(ParameterSetName = 'id', Mandatory = $true, HelpMessage = 'Enter the ID of each manga check updates for.', ValueFromPipeline = $true)]
-        [long]$MangaId
+        [long]$MangaId,
+
+        [Parameter(ParameterSetName = 'id', Mandatory = $false, HelpMessage = 'Sends notice to pushbullet if present.')]
+        [Parameter(ParameterSetName = 'Default', Mandatory = $false, HelpMessage = 'Enter the ID of each manga check updates for.')]
+        [Switch]$PushBullet,
+
+        [Parameter(ParameterSetName = 'id', Mandatory = $false, HelpMessage = 'Supress the output to PowerShell.')]
+        [Parameter(ParameterSetName = 'Default', Mandatory = $false, HelpMessage = 'Supress the output to PowerShell.')]
+        [Switch]$Quiet
     )
 
     Begin {
         if($PSCmdlet.ParameterSetName -eq 'Default') {
-            (Get-IniContent -file $MDX_Manga).Keys | Get-MangaDexUpdates
+            (Get-IniContent -file $MDX_Manga).Keys | Get-MangaDexUpdates -Quiet:($Quiet.IsPresent) -PushBullet:($PushBullet.IsPresent)
         } else {
             $newChapters = [List[Object]]::New()
         }
@@ -29,7 +37,12 @@ function Get-MangaDexUpdates {
                     )
                 )
 
-                Send-MangaDexPushBullet -Title $manga.manga.title -Message ('Chapter {0} has been released!' -f $lastUploaded.Value.chapter)
+                if(-not $Quiet) {
+                    '{0} has been updated! New chapter: {1}' -f $manga.manga.title, $lastUploaded.Value.chapter
+                }
+                if($PushBullet) {
+                    Send-MangaDexPushBullet -Title $manga.manga.title -Message ('Chapter {0} has been released!' -f $lastUploaded.Value.chapter)
+                }
             }
         }
     }
