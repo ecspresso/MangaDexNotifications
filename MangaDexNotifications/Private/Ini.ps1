@@ -4,7 +4,7 @@ function Get-IniContent {
     Param(
         [String]$FilePath
     )
-    $ini = @{}
+    $ini = [Ordered]@{}
     switch -regex -file $FilePath
     {
         '^\[(.+)\]' # Section
@@ -32,8 +32,13 @@ function Get-IniContent {
 function Out-IniFile {
     Param(
         [Hashtable]$InputObject,
-        [String]$FilePath
+        [String]$FilePath,
+        [Switch]$RemoveOldData
     )
+
+    if($RemoveOldData) {
+        $null | Set-Content -Path $FilePath
+    }
 
     foreach ($i in $InputObject.keys)
     {

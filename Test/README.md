@@ -1,0 +1,1 @@
+Everything in this folder will be ignored. Do all your testing here.

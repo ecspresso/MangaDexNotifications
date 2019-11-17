@@ -99,8 +99,7 @@ function Remove-MangaDexManga {
 
     End {
         if($update) {
-            $null | Out-File -FilePath $MDX_Manga
-            Out-IniFile -FilePath $MDX_Manga -InputObject $currentManga
+            Out-IniFile -FilePath $MDX_Manga -InputObject $currentManga -RemoveOldData
         }
     }
 }

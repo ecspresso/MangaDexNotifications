@@ -5,37 +5,25 @@ function Set-MangaDexPushBulletAPI {
         [String]$APIKey
     )
 
-    $config = Get-IniContent -FilePath $MDX_Config
-    if($config['PushBullet']) {
-        if ($config['PushBullet']['APIKey']) {
-            $config = Get-Content -Path $MDX_Config
-            $config[( $config.IndexOf(($config | Where-Object { $_ -match 'APIKey=.*' })) )] = 'APIKey={0}' -f ($APIKey | ConvertTo-SecureString -AsPlainText -Force | ConvertFrom-SecureString)
+    $currentSettings = Get-IniContent -FilePath $MDX_Config
 
-            Set-Content -Path $MDX_Config -Value $config
-        } else {
-            $config = Get-Content -Path $MDX_Config
-            $index = $config.IndexOf(($config | Where-Object { $_ -eq '[PushBullet]' })) + 1
-            if(($config.Length - 1) -lt $index) {
-                $config += 'APIKey={0}' -f ($APIKey | ConvertTo-SecureString -AsPlainText -Force | ConvertFrom-SecureString)
-            } else {
-                $config[$index] = 'APIKey={0}' -f ($APIKey | ConvertTo-SecureString -AsPlainText -Force | ConvertFrom-SecureString)
-            }
-
-            Set-Content -Path $MDX_Config -Value $config
-        }
-    } else {
-        Out-IniFile -FilePath $MDX_Config -InputObject (@{PushBullet = @{APIKey = ($APIKey | ConvertTo-SecureString -AsPlainText -Force | ConvertFrom-SecureString)}})
+    if (-not $currentSettings['PushBullet']) {
+        $currentSettings['PushBullet'] = @{}
     }
+
+    $currentSettings['PushBullet']['APIKey'] = $APIKey | ConvertTo-SecureString -AsPlainText -Force | ConvertFrom-SecureString
+
+    Out-IniFile -FilePath $MDX_Config -InputObject $currentSettings -RemoveOldData
 }
 
 function Get-MangaDexPushBulletAPI {
     [CmdletBinding()]
     Param()
 
-    $config = Get-IniContent -FilePath $MDX_Config
-    if($config['PushBullet']) {
-        if($config['PushBullet']['APIKey']) {
-            return [PSCredential]::new('null', ($config['PushBullet']['APIKey'] | ConvertTo-SecureString)).GetNetworkCredential().Password
+    $currentSettings = Get-IniContent -FilePath $MDX_Config
+    if($currentSettings['PushBullet']) {
+        if($currentSettings['PushBullet']['APIKey']) {
+            return [PSCredential]::new('null', ($currentSettings['PushBullet']['APIKey'] | ConvertTo-SecureString)).GetNetworkCredential().Password
         } else {
             throw 'APIKey has not been set yet.'
         }
@@ -48,20 +36,16 @@ function Remove-MangaDexPushBulletAPI{
     [CmdletBinding()]
     Param ()
 
-    if ($config['PushBullet']['APIKey']) {
-        $config = Get-Content -Path $MDX_Config
-        $config[( $config.IndexOf(($config | Where-Object { $_ -match 'APIKey=.*' })) )] = 'APIKey={0}' -f ''
+    $currentSettings = Get-IniContent -FilePath $MDX_Config
 
-        Set-Content -Path $MDX_Config -Value $config
-    } else {
-        $config = Get-Content -Path $MDX_Config
-        $index = $config.IndexOf(($config | Where-Object { $_ -eq '[PushBullet]' })) + 1
-        if(($config.Length - 1) -lt $index) {
-            $config += 'APIKey={0}' -f ''
+    if ($currentSettings['PushBullet']) {
+        if($currentSettings['PushBullet']['APIKey']) {
+            $currentSettings['PushBullet']['APIKey'] = ''
+            Out-IniFile -FilePath $MDX_Config -InputObject $currentSettings -RemoveOldData
         } else {
-            $config[$index] = 'APIKey={0}' -f ''
+            Write-Warning -Message 'API key is not set.'
         }
-
-        Set-Content -Path $MDX_Config -Value $config
+    } else {
+        Write-Warning -Message 'PushBullet has not been configured.'
     }
 }
