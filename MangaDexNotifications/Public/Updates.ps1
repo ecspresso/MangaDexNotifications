@@ -29,9 +29,15 @@ function Get-MangaDexUpdates {
 
     Process {
         if($PSCmdlet.ParameterSetName -eq 'id') {
-            $lastSeen = (Get-MangaDexManga -MangaID $MangaId).'latest chapter'
-            $manga = Invoke-RestMethod -Uri ('https://mangadex.org/api/manga/{0}' -f $MangaId)
-            $lastUploaded = $manga.chapter.PSobject.Properties | Where-Object {$_.MemberType -eq 'NoteProperty'} | Select-Object -First 1
+            $manga = Get-MangaDexManga -MangaID $MangaId
+            $lastSeen = $manga.'latest chapter'
+            $mangaDex = Invoke-RestMethod -Uri ('https://mangadex.org/api/manga/{0}' -f $MangaId)
+
+            if($manga.language) {
+                $lastUploaded = $mangaDex.chapter.PSobject.Properties | Where-Object {$_.MemberType -eq 'NoteProperty' -and $manga.language.Split() -contains $_.Value.lang_code} | Select-Object -First 1
+            } else {
+                $lastUploaded = $mangaDex.chapter.PSobject.Properties | Where-Object {$_.MemberType -eq 'NoteProperty'} | Select-Object -First 1
+            }
 
             if($lastSeen -lt $lastUploaded.Value.chapter) {
                 $newChapters.Add(
@@ -42,13 +48,13 @@ function Get-MangaDexUpdates {
                 )
 
                 if(-not $Quiet) {
-                    '{0} has been updated! New chapter: {1}' -f $manga.manga.title, $lastUploaded.Value.chapter
+                    '{0} has been updated! New chapter: {1}' -f $mangaDex.manga.title, $lastUploaded.Value.chapter
                 }
                 if($PushBullet) {
-                    Send-MangaDexPushBullet -Title $manga.manga.title -Message ('Chapter {0} has been released!{1}https://mangadex.org/chapter/{2}/' -f $lastUploaded.Value.chapter, [System.Environment]::NewLine, $lastUploaded.Name)
+                    Send-MangaDexPushBullet -Title $mangaDex.manga.title -Message ('Chapter {0} has been released!{1}https://mangadex.org/chapter/{2}/' -f $lastUploaded.Value.chapter, [System.Environment]::NewLine, $lastUploaded.Name)
                 }
                 if ($Email) {
-                    Send-MangaDexEmail -Subject ('{0} chapter {1} released!' -f $manga.manga.title, $lastUploaded.Value.chapter) -Body ('Chapter {0} of {1} has been released.{2}https://mangadex.org/chapter/{3}/' -f $lastUploaded.Value.chapter, $manga.manga.title, [System.Environment]::NewLine, $lastUploaded.Name)
+                    Send-MangaDexEmail -Subject ('{0} chapter {1} released!' -f $mangaDex.manga.title, $lastUploaded.Value.chapter) -Body ('Chapter {0} of {1} has been released.{2}https://mangadex.org/chapter/{3}/' -f $lastUploaded.Value.chapter, $manga.manga.title, [System.Environment]::NewLine, $lastUploaded.Name)
                 }
             }
         }
@@ -62,7 +68,9 @@ function Get-MangaDexUpdates {
                 $manga["$($chapter[0])"]['latest_chapter'] = $chapter[1]
             }
 
-            Out-IniFile -FilePath $MDX_Manga -InputObject $manga -RemoveOldData
+            if($newChapters.Count) {
+                Out-IniFile -FilePath $MDX_Manga -InputObject $manga -RemoveOldData
+            }
         }
     }
 }
