@@ -1,3 +1,5 @@
+Discontinued and rewritten in Python: https://github.com/ecspresso/Notifications/tree/master/MangaDex
+
 # MangaDexNotifications
 Check for new chapters on https://mangadex.org/ with PowerShell.
 
